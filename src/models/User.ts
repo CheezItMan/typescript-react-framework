@@ -1,7 +1,9 @@
 import { UserProps } from '../types/UserProps';
-
+import { Callback } from '../types/Function';
 
 export class User {
+  events: { [key: string]: Callback[] } = {}
+
   constructor (private data: UserProps) { }
   
   get(propName: string): (number | string) {
@@ -10,5 +12,23 @@ export class User {
   
   set(update: UserProps): void {
     Object.assign(this.data, update);
+  }
+
+  on(eventName: string, callback: Callback): void {
+    const handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  }
+
+  trigger(eventName: string): void {
+    const handlers = this.events[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    handlers.forEach(callback => {
+      callback();
+    });
   }
 }

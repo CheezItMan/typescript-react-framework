@@ -129,6 +129,7 @@ var User =
 function () {
   function User(data) {
     this.data = data;
+    this.events = {};
   }
 
   User.prototype.get = function (propName) {
@@ -137,6 +138,24 @@ function () {
 
   User.prototype.set = function (update) {
     Object.assign(this.data, update);
+  };
+
+  User.prototype.on = function (eventName, callback) {
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  };
+
+  User.prototype.trigger = function (eventName) {
+    var handlers = this.events[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
   };
 
   return User;
@@ -156,14 +175,17 @@ var u = new User_1.User({
   name: 'Bob',
   age: 20
 });
-console.log('Hiya');
-console.log("u.name = " + u.get('name'));
-console.log("u.age = " + u.get('age'));
-u.set({
-  name: 'Cal'
+u.on('dufus', function () {
+  console.log('doh');
 });
-console.log("u.name = " + u.get('name'));
-console.log("u.age = " + u.get('age'));
+u.on('dufus', function () {
+  console.log('arg');
+});
+u.on('somethin', function () {
+  console.log('doh');
+});
+console.log(u);
+u.trigger('dufus');
 },{"./models/User":"src/models/User.ts"}],"../../../../.npm-packages/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

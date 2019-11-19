@@ -5,10 +5,11 @@ const u = new User({
   age: 20,
 });
 
-console.log('Hiya');
-console.log(`u.name = ${u.get('name')}`);
-console.log(`u.age = ${u.get('age')}`);
-u.set({ name: 'Cal' });
+u.on('dufus', () => { console.log('doh') });
+u.on('dufus', () => { console.log('arg') });
+u.on('somethin', () => { console.log('doh') });
 
-console.log(`u.name = ${u.get('name')}`);
-console.log(`u.age = ${u.get('age')}`);
+
+
+console.log(u);
+u.trigger('dufus')
