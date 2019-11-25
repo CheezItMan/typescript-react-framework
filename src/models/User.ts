@@ -3,6 +3,7 @@ import { Model } from './Model';
 import { Attributes } from './Attributes';
 import { ApiSync } from './ApiSync';
 import { Eventing } from './Eventing';
+import { Collection } from './Collection'
 
 
 const URL = 'http://localhost:3000'
@@ -13,6 +14,13 @@ export class User extends Model<UserProps> {
       new Attributes(attrs),
       new Eventing(),
       new ApiSync<UserProps>(URL)
+    );
+  }
+
+  static buildUserCollection(): Collection<User, UserProps> {
+    return new Collection<User, UserProps>(
+      'http://localhost:3000/users',
+      User.buildUser
     );
   }
 }
