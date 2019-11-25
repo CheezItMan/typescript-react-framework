@@ -25,8 +25,26 @@ export class Model<T extends HasId> {
 
   set = this.attributes.set;
 
-  fetch = this.sync.fetch;
+  fetch(): void {
+    const id = this.get('id');
+    if (!id) {
+      throw new Error('Cannot fetch without an ID');
+    }
+    this.sync.fetch(id).then((response: AxiosResponse): void => {
+      const { data } = response;
+      this.set(data);
+    });
+  }
 
-  save = this.sync.save;
+  save = () => {
+    const data = this.attributes.getAll();
+    this.sync.save(data)
+      .then((response: AxiosResponse): void => {
+        this.trigger('saved');
+      })
+      .catch(() => {
+        this.trigger('error');
+      });
+  }
 
 }
