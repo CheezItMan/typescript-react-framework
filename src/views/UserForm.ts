@@ -40,6 +40,5 @@ export class UserForm extends View<User, UserProps> {
   }
 
   onHoverHeader = () => {
-    console.log('over over over');
   }
 }
